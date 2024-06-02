@@ -64,7 +64,10 @@ fn make_image(scale: u64, steps: u64, ratio: f64, seed: u64) -> RgbImage {
     let mut cur_dir: Dir = Dir::Up;
     let max2 = ((size as f64).log2() * ratio) as usize;
     let dists: Vec<usize> = (0..max2).map(|i| 1 << i).collect();
-    for _ in 0..steps {
+    for i in 0..steps {
+        if i.is_power_of_two() {
+            println!("{i}");
+        }
         // Compare and swap
         let dist = dists[rng.gen_range(0..dists.len())];
         let next_loc = cur_dir.apply(loc, size, dist);
@@ -101,10 +104,10 @@ fn make_image(scale: u64, steps: u64, ratio: f64, seed: u64) -> RgbImage {
 }
 
 fn main() {
-    let scale = 10;
+    let scale: u64 = 10;
     let seed = 0;
     let ratio = 0.5;
-    let steps = 50000 * scale.pow(6);
+    let steps = 200000 * scale.pow(6);
     let filename = format!("img-{}-{}-{}-{}.png", scale, steps, ratio, seed,);
     println!("{}", filename);
     let img = make_image(scale, steps, ratio, seed);
